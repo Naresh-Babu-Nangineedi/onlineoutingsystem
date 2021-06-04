@@ -38,18 +38,8 @@ const userSchema = mongoose.Schema({
         reuired:true
     },
     address:{
-        doorno:{
-            type:String,
-            required:true
-        },
-        place:{
-            type:String,
-            required:true
-        },
-        pincode:{
-            type:Number,
-            required:true
-        }
+        type:String,
+        required:true
     },
     bloodgroup:{
         type:String,
@@ -64,7 +54,8 @@ const userSchema = mongoose.Schema({
         required:true
     },
     isadmin:{
-        default:false
+        type:Number,
+        default:0
     },
     outingtype:{
         type: String,
@@ -73,6 +64,10 @@ const userSchema = mongoose.Schema({
     hostelname : {
         type : String,
         required: true
+    },
+    outing:{
+        type:Boolean,
+        default:false
     },
     date:{
         type:Date,

@@ -29,3 +29,7 @@ const outingSchema = mongoose.Schema({
 },{
     timestamp:true
 })
+
+const Outing = mongoose.model("Outing",outingSchema)
+
+module.exports = Outing
