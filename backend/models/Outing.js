@@ -21,6 +21,18 @@ const outingSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    hod:{
+        type:Boolean,
+        default:false
+    },
+    warden:{
+        type:Boolean,
+        default:false
+    },
+    incharge:{
+        type : Boolean,
+        default : false
+    },
     date:{
         type:Date,
         default:Date.now

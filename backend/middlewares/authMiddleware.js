@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 const HostelIncharge = require("../models/HostelIncharge")
 const config = require("config")
-
+const User = require("../models/User")
 const jwt_secret = config.get("JWT_SECRET")
 
 
@@ -14,6 +14,27 @@ const isInchargeLogin=async(req,res,next)=>{
             token=req.headers.authorization
             const decoded = jwt.verify(token,jwt_secret)
             req.user = await HostelIncharge.findById(decoded.id).select("-password")
+            next()
+            
+        } catch (err) {
+            console.error(err.message)
+            return res.status(401).json({msg:"Not Authorized"})
+        }
+    }
+    if(!token){
+        return res.status(401).json({msg:"Not Authorized, token not found"})
+    }
+}
+
+//User LoggedIn or not
+const isUserLogin=async(req,res,next)=>{
+    let token;
+    if(req.headers.authorization){
+        try {
+            token=req.headers.authorization
+            const decoded = jwt.verify(token,jwt_secret)
+            req.user = await User.findById(decoded.id).select("-password")
+            //console.log(req.user)
             next()
             
         } catch (err) {
@@ -54,4 +75,4 @@ const isIncharge = async(req,res,next)=>{
 
 }
 
-module.exports={isIncharge,isInchargeLogin}
+module.exports={isIncharge,isInchargeLogin,isUserLogin}
