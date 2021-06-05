@@ -7,6 +7,9 @@ const config = require("config")
 
 const jwt_secret = config.get("JWT_SECRET")
 
+
+
+// Add New Student
 const addStudent = async(req,res)=>{
 
     const {firstname,lastname,department,year,gender,email,regno,mobile,section,address,bloodgroup,parent,outingtype,hostelname}=req.body
@@ -43,7 +46,7 @@ const addStudent = async(req,res)=>{
 
     if(user){
         res.status(201).json({
-            msg:"Student added Successfully"
+           user
         })
     }else{
         res.status(400).json({msg:"Unable to add student"})
@@ -89,7 +92,8 @@ const loginIncharge = async(req,res)=>{
     }else{
         const payload={
             email,
-            isAdmin:incharge.isadmin
+            isAdmin:incharge.isadmin,
+            id:incharge._id
         }
         const token = await jwt.sign(payload,jwt_secret)
         return res.json({
