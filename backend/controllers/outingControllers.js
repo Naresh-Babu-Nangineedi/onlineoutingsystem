@@ -2,6 +2,7 @@ const User = require("../models/User")
 const Outing = require("../models/Outing")
 
 
+// Applying Outing
 const applyOuting = async(req,res)=>{
     const {reason,reasontype,from,to} = req.body
     const userId = req.user.id 
@@ -13,17 +14,24 @@ const applyOuting = async(req,res)=>{
     if(!user){
         return res.status(404).json({msg:"User not found"})
     }
-    let outingUser = await Outing.findOne({userId})
-    // console.log(outingUser)
-    if(user.outing===true||outingUser){
+    if(user.outing===true){
         return res.status(400).json({msg:"User already in outing"})
     }
+    let outingUser = await Outing.findOne({userId})
+     //console.log(outingUser)
+     if(outingUser){
+         if(outingUser.process===1){
+             return res.status(400).json({msg:"Outing is in process"})
+         }
+     }
+    let processId=1
     const outing = await Outing.create({
         reason,
         reasontype,
         from,
         to,
-        userId
+        userId,
+        process:processId,
     })
     if(outing){
         res.status(201).json({outing})
@@ -32,4 +40,22 @@ const applyOuting = async(req,res)=>{
     }
 }
 
-module.exports = {applyOuting}
+
+
+
+// Get all outing of user
+const getUserOutings = async(req,res)=>{
+    const {regno}=req.params
+    //console.log(regno)
+    const user = await User.findOne({regno})
+    const allOutings = await Outing.find({userId:user._id})
+    if(allOutings){
+        return res.status(200).json(allOutings)
+    }else{
+        return res.status(400).json({msg:"Unable to get user details"})
+    }
+}
+
+
+
+module.exports = {applyOuting,getUserOutings}

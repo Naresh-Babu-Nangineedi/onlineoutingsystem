@@ -33,6 +33,10 @@ const outingSchema = mongoose.Schema({
         type : Boolean,
         default : false
     },
+    process:{
+        type:Number,
+        default:0
+    },
     date:{
         type:Date,
         default:Date.now
