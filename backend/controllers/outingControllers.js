@@ -33,7 +33,8 @@ const applyOuting = async(req,res)=>{
         userId,
         process:processId,
         department:user.department,
-        gender:user.gender
+        gender:user.gender,
+        parentmobile:user.parentmobile
     })
     if(outing){
         res.status(201).json({outing})

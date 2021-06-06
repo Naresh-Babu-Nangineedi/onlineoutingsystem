@@ -33,7 +33,7 @@ const userSchema = mongoose.Schema({
         type:Number,
         reuired:true
     },
-    parentMobile:{
+    parentmobile:{
         type:Number,
         required:true
     },

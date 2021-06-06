@@ -13,9 +13,9 @@ const jwt_secret = config.get("JWT_SECRET")
 // Add New Student
 const addStudent = async(req,res)=>{
 
-    const {firstname,lastname,parentMobile,department,year,gender,email,regno,mobile,section,address,bloodgroup,parent,outingtype,hostelname}=req.body
+    const {firstname,lastname,parentmobile,department,year,gender,email,regno,mobile,section,address,bloodgroup,parent,outingtype,hostelname}=req.body
 
-    if(!firstname||!lastname||!parentMobile||!department||!year||!gender||!email||!regno||!mobile||!section||!address||!bloodgroup||!parent||!outingtype||!hostelname){
+    if(!firstname||!lastname||!parentmobile||!department||!year||!gender||!email||!regno||!mobile||!section||!address||!bloodgroup||!parent||!outingtype||!hostelname){
         return res.status(400).json({msg:"All fields are required"})
     }
 
@@ -33,7 +33,7 @@ const addStudent = async(req,res)=>{
         department,
         year,
         gender,
-        parentMobile,
+        parentmobile,
         email,
         regno,
         mobile,
@@ -199,6 +199,24 @@ const rejectInchargeOuting = async(req,res)=>{
 }
 
 
+// Change Incharge Password
+const changeInchargePassword = async(req,res)=>{
+    const {new_password} = req.body
+    const inchargeId = req.user
+    const incharge = await HostelIncharge.findById(inchargeId).select("-password")
+    const salt = await bcryptjs.genSalt(10)
+    const hashed_password = await bcryptjs.hash(new_password,salt)
+    incharge.password = hashed_password
+    const newPasswordUser = await incharge.save()
+    if(newPasswordUser){
+        return res.status(200).json({msg:"Password Changed Successfully"})
+    }else{
+        return res.status(400).json({msg:"Unable to change password"})
+    }
+}
+
+
+
 module.exports={
     addStudent,
     addIncharge,
@@ -207,5 +225,6 @@ module.exports={
     approveInchargeOuting,
     rejectInchargeOuting,
     updateUser,
-    deleteUser
+    deleteUser,
+    changeInchargePassword
 }

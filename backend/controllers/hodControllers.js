@@ -118,11 +118,31 @@ const rejectHodOuting = async(req,res)=>{
 
 
 
+// Change HOD Password
+const changeHodPassword = async(req,res)=>{
+    const {new_password} = req.body
+    const hodId = req.user
+    const hod = await Hod.findById(hodId).select("-password")
+    const salt = await bcryptjs.genSalt(10)
+    const hashed_password = await bcryptjs.hash(new_password,salt)
+    hod.password = hashed_password
+    const newPasswordUser = await hod.save()
+    if(newPasswordUser){
+        return res.status(200).json({msg:"Password Changed Successfully"})
+    }else{
+        return res.status(400).json({msg:"Unable to change password"})
+    }
+}
+
+
+
+
 module.exports={
     addHod,
     loginHod,
     allDepartmentOutings,
     allDepartmentUsers,
     approveHodOuting,
-    rejectHodOuting
+    rejectHodOuting,
+    changeHodPassword
 }

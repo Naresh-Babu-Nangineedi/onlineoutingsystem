@@ -43,6 +43,9 @@ const outingSchema = mongoose.Schema({
         type:Number,
         default:0
     },
+    parentmobile:{
+        type:Number
+    },
     date:{
         type:Date,
         default:Date.now

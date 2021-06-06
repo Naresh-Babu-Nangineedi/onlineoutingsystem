@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const wardenschema = mongoose.Schema({
+const wardenSchema = mongoose.Schema({
     isadmin: {
         type:Number,
         default: 1
@@ -21,6 +21,6 @@ const wardenschema = mongoose.Schema({
 })
 
 
-const Warden = mongoose.model("Warden",WardenSchema)
+const Warden = mongoose.model("Warden",wardenSchema)
 
 module.exports = Warden
