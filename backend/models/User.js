@@ -33,6 +33,10 @@ const userSchema = mongoose.Schema({
         type:Number,
         reuired:true
     },
+    parentMobile:{
+        type:Number,
+        required:true
+    },
     section:{
         type:String,
         reuired:true

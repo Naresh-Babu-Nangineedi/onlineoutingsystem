@@ -4,6 +4,7 @@ const User = require("../models/User")
 const HostelIncharge = require("../models/HostelIncharge")
 const jwt = require("jsonwebtoken")
 const config = require("config")
+const Outing = require("../models/Outing")
 
 const jwt_secret = config.get("JWT_SECRET")
 
@@ -12,9 +13,9 @@ const jwt_secret = config.get("JWT_SECRET")
 // Add New Student
 const addStudent = async(req,res)=>{
 
-    const {firstname,lastname,department,year,gender,email,regno,mobile,section,address,bloodgroup,parent,outingtype,hostelname}=req.body
+    const {firstname,lastname,parentMobile,department,year,gender,email,regno,mobile,section,address,bloodgroup,parent,outingtype,hostelname}=req.body
 
-    if(!firstname||!lastname||!department||!year||!gender||!email||!regno||!mobile||!section||!address||!bloodgroup||!parent||!outingtype||!hostelname){
+    if(!firstname||!lastname||!parentMobile||!department||!year||!gender||!email||!regno||!mobile||!section||!address||!bloodgroup||!parent||!outingtype||!hostelname){
         return res.status(400).json({msg:"All fields are required"})
     }
 
@@ -32,6 +33,7 @@ const addStudent = async(req,res)=>{
         department,
         year,
         gender,
+        parentMobile,
         email,
         regno,
         mobile,
@@ -54,6 +56,54 @@ const addStudent = async(req,res)=>{
 
 }
 
+// Update User
+const updateUser=async(req,res)=>{
+    const inchargeId = req.user
+    const userId = req.params.userId
+    const {firstname,parentMobile,lastname,department,year,gender,email,regno,mobile,section,address,bloodgroup,parent,outingtype,hostelname}=req.body
+    const newUser={}
+    if(firstname) newUser.firstname=firstname
+    if(lastname) newUser.lastname=lastname
+    if(department) newUser.department=department
+    if(year) newUser.year=year
+    if(gender) newUser.gender=gender
+    if(email) newUser.email=email
+    if(regno) newUser.regno=regno
+    if(mobile) newUser.mobile=mobile
+    if(section) newUser.section=section
+    if(address) newUser.address=address
+    if(bloodgroup) newUser.bloodgroup=bloodgroup
+    if(parent) newUser.parent=parent
+    if(outingtype) newUser.outingtype=outingtype
+    if(hostelname) newUser.hostelname=hostelname
+    if(parentMobile) newUser.parentMobile=parentMobile
+    //console.log(newUser)
+   // console.log(userId)
+    try {
+        let user = await User.findById(userId).select("-password")
+       // console.log(user)
+        if(!user) return res.status(404).json({msg:"User not found"})
+        user = await User.findByIdAndUpdate(userId,{$set:newUser},{new:true})
+        return res.status(200).json(user)  
+    } catch (err) {
+        return res.status(400).json({msg:"Error occurs at backend"})
+    }
+
+}
+
+
+// Delete User
+const deleteUser=async(req,res)=>{
+    const {userId}=req.params
+    try {
+        let user = await User.findById(userId).select("-password")
+        if(!user) return res.status(404).json({msg:"User not found"})
+        await User.findByIdAndRemove(userId)
+        return res.status(200).json({msg:"User Deleted Successfully"})
+    } catch (err) {
+        return res.status(400).json({msg:"Error occurs at backend"})
+    }
+}
 
 
 //Add new Incharge
@@ -103,13 +153,59 @@ const loginIncharge = async(req,res)=>{
             email
         })
     }
-
 }
 
+
+// Get all HOD approved outings and gender based
+const allGenderOutings = async(req,res)=>{
+    const inchargeId = req.user 
+    const incharge = await HostelIncharge.findById(inchargeId).select("-password")
+    // const departmentUsers = await User.find({department:hod.department})
+    const presentOutings = await Outing.find({process:1,hod:1,gender:incharge.gender})
+    if(presentOutings){
+        return res.status(200).json(presentOutings)
+    }else{
+        return res.status(400).json({msg:"Unable to get Current Outings"})
+    }
+}
+
+
+// Approve Incharge Outing
+const approveInchargeOuting = async(req,res)=>{
+    const {outingId} = req.params
+    let outing = await Outing.findById(outingId)
+    outing.incharge=1
+    await outing.save()
+    //console.log(outing)
+    if(outing.incharge===1){
+        return res.json(outing)
+    }else{
+        return res.status(400).json({msg:"Unable to approve outing"})
+    }
+}
+
+// Reject Incharge Outing
+const rejectInchargeOuting = async(req,res)=>{
+    const {outingId} = req.params
+    let outing = await Outing.findById(outingId)
+    outing.incharge=2
+    await outing.save()
+    //console.log(outing)
+    if(outing.incharge===2){
+        return res.json(outing)
+    }else{
+        return res.status(400).json({msg:"Unable to reject outing"})
+    }
+}
 
 
 module.exports={
     addStudent,
     addIncharge,
-    loginIncharge
+    loginIncharge,
+    allGenderOutings,
+    approveInchargeOuting,
+    rejectInchargeOuting,
+    updateUser,
+    deleteUser
 }

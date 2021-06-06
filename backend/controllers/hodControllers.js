@@ -1,10 +1,12 @@
 const Hod = require("../models/Hod")
+const Outing = require("../models/Outing")
 const bcryptjs = require("bcryptjs")
-const User = require("../models/User")
+const User = require("../models/User") 
 const jwt=require("jsonwebtoken")
 
 const config = require("config")
 const jwt_secret = config.get("JWT_SECRET")
+
 //Add new HOD
 const addHod =async (req,res)=>{
     const {email,password,department}=req.body
@@ -60,7 +62,67 @@ const loginHod = async(req,res)=>{
 
 
 
+// Get all students in respective Department
+const allDepartmentUsers = async(req,res)=>{
+    const hodId = req.user 
+    const hod = await Hod.findById(hodId).select("-password")
+    const departmentUsers = await User.find({department:hod.department}).select("-password")
+    if(departmentUsers){
+        return res.status(200).json(departmentUsers)
+    }else{
+        return res.status(400).json({msg:"Unable to get al Users"})
+    }
+}
+
+// Get all outings 
+const allDepartmentOutings = async(req,res)=>{
+    const hodId = req.user 
+    const hod = await Hod.findById(hodId).select("-password")
+    const departmentUsers = await User.find({department:hod.department})
+    const presentOutings = await Outing.find({process:1,department:hod.department})
+    if(presentOutings){
+        return res.status(200).json(presentOutings)
+    }else{
+        return res.status(400).json({msg:"Unable to get Current Outings"})
+    }
+}
+
+
+// Approve Outing
+const approveHodOuting = async(req,res)=>{
+    const {outingId} = req.params
+    let outing = await Outing.findById(outingId)
+    outing.hod=1
+    await outing.save()
+    //console.log(outing)
+    if(outing.hod===1){
+        return res.json(outing)
+    }else{
+        return res.status(400).json({msg:"Unable to approve outing"})
+    }
+}
+
+// Reject Outing
+const rejectHodOuting = async(req,res)=>{
+    const {outingId} = req.params
+    let outing = await Outing.findById(outingId)
+    outing.hod=2
+    await outing.save()
+    //console.log(outing)
+    if(outing.hod===2){
+        return res.json(outing)
+    }else{
+        return res.status(400).json({msg:"Unable to reject outing"})
+    }
+}
+
+
+
 module.exports={
     addHod,
-    loginHod
+    loginHod,
+    allDepartmentOutings,
+    allDepartmentUsers,
+    approveHodOuting,
+    rejectHodOuting
 }

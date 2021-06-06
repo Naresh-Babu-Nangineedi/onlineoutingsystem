@@ -22,16 +22,22 @@ const outingSchema = mongoose.Schema({
         required:true
     },
     hod:{
-        type:Boolean,
-        default:false
+        type:Number,
+        default:0
     },
     warden:{
-        type:Boolean,
-        default:false
+        type:Number,
+        default:0
+    },
+    department:{
+        type:String
+    },
+    gender:{
+        type:String
     },
     incharge:{
-        type : Boolean,
-        default : false
+        type : Number,
+        default : 0
     },
     process:{
         type:Number,
