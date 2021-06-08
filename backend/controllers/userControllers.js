@@ -8,6 +8,7 @@ const jwt_secret = config.get("JWT_SECRET")
 // User Login
 const loginUser = async(req,res)=>{
     const {regno,password}=req.body
+    //console.log(regno)
     if(!regno||!password){
         return res.status(400).json({msg:"All fields are required"})
     }
