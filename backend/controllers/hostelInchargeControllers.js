@@ -182,6 +182,19 @@ const getAllHostelsByGender=async(req,res)=>{
     }
 }
 
+const getAllStudentsByHostel=async(req,res)=>{
+    const {hostelId} = req.params
+    const incharge = await HostelIncharge.findOne({_id:req.user})
+    const hostel = await Hostel.findOne({_id:hostelId})
+    const allStudentsByHostel  = await User.find({hostelname:hostel.name})
+    if(allStudentsByHostel){
+        return res.status(200).json(allStudentsByHostel)
+    }else{
+        return res.status(400).json({json:"Unable to get all students data"})
+    }
+}
+
+
 
 
 // Get all HOD approved outings and gender based
@@ -231,9 +244,14 @@ const rejectInchargeOuting = async(req,res)=>{
 
 // Change Incharge Password
 const changeInchargePassword = async(req,res)=>{
-    const {new_password} = req.body
+    const {new_password,old_password} = req.body
     const inchargeId = req.user
-    const incharge = await HostelIncharge.findById(inchargeId).select("-password")
+    const incharge = await HostelIncharge.findById(inchargeId)
+    //console.log(old_password)
+    const isMatch = await bcryptjs.compare(old_password,incharge.password)
+    if(!isMatch){
+        return res.status(400).json({msg:"Old Password is Wrong"})
+    }
     const salt = await bcryptjs.genSalt(10)
     const hashed_password = await bcryptjs.hash(new_password,salt)
     incharge.password = hashed_password
@@ -258,5 +276,6 @@ module.exports={
     deleteUser,
     changeInchargePassword,
     addHostel,
-    getAllHostelsByGender
+    getAllHostelsByGender,
+    getAllStudentsByHostel
 }

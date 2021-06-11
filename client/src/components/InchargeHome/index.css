@@ -1,0 +1,18 @@
+.cardMarginHome{
+    margin:20px;
+    color:#333;
+}
+.alignText{
+    align-items: center;
+}
+
+@media screen and (max-width:576px){
+    .cardMarginHome{
+        margin:0px;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+    .cardHeading{
+        font-size:24px;
+    }
+}
