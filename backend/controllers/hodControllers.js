@@ -106,10 +106,11 @@ const approveHodOuting = async(req,res)=>{
 const rejectHodOuting = async(req,res)=>{
     const {outingId} = req.params
     let outing = await Outing.findById(outingId)
-    outing.hod=2
+    outing.hod=0
+    outing.process=0
     await outing.save()
     //console.log(outing)
-    if(outing.hod===2){
+    if(outing.hod===0){
         return res.json(outing)
     }else{
         return res.status(400).json({msg:"Unable to reject outing"})

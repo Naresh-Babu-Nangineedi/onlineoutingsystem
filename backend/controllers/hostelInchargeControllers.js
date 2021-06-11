@@ -5,7 +5,7 @@ const HostelIncharge = require("../models/HostelIncharge")
 const jwt = require("jsonwebtoken")
 const config = require("config")
 const Outing = require("../models/Outing")
-
+const Hostel = require("../models/Hostel")
 const jwt_secret = config.get("JWT_SECRET")
 
 
@@ -156,6 +156,34 @@ const loginIncharge = async(req,res)=>{
 }
 
 
+
+// Add New Hostel
+const addHostel=async(req,res)=>{
+    const {name} = req.body
+    const inchargeId = req.user
+    const incharge = await HostelIncharge.findOne({_id:inchargeId})
+    const gender = incharge.gender
+    const hostel = await Hostel.create({name,gender})
+    if(hostel){
+        return res.status(200).json({hostel})
+    }else{
+        return res.status(400).json({msg:"Unable to save Hostel"})
+    }
+}
+
+
+const getAllHostelsByGender=async(req,res)=>{
+    const incharge = await HostelIncharge.findOne({_id:req.user})
+    const allHostelsByGender = await Hostel.find({gender:incharge.gender})
+    if(allHostelsByGender){
+        return res.status(200).json(allHostelsByGender)
+    }else{
+        return res.status(400).json({json:"Unable to get all Hostels"})
+    }
+}
+
+
+
 // Get all HOD approved outings and gender based
 const allGenderOutings = async(req,res)=>{
     const inchargeId = req.user 
@@ -188,10 +216,12 @@ const approveInchargeOuting = async(req,res)=>{
 const rejectInchargeOuting = async(req,res)=>{
     const {outingId} = req.params
     let outing = await Outing.findById(outingId)
-    outing.incharge=2
+    outing.incharge=0
+    outing.hod=0
+    outing.process=0
     await outing.save()
     //console.log(outing)
-    if(outing.incharge===2){
+    if(outing.incharge===0){
         return res.json(outing)
     }else{
         return res.status(400).json({msg:"Unable to reject outing"})
@@ -226,5 +256,7 @@ module.exports={
     rejectInchargeOuting,
     updateUser,
     deleteUser,
-    changeInchargePassword
+    changeInchargePassword,
+    addHostel,
+    getAllHostelsByGender
 }

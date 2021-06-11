@@ -88,9 +88,11 @@ const approveWardenOuting = async(req,res)=>{
 const rejectWardenOuting = async(req,res)=>{
     const {outingId} = req.params
     let outing = await Outing.findById(outingId)
-    outing.warden=2
+    outing.warden=0
+    outing.hod=0
+    outing.incharge=0
     await outing.save()
-    if(outing.warden===2){
+    if(outing.warden===0){
         return res.json(outing)
     }else{
         return res.status(400).json({msg:"Unable to reject outing"})
