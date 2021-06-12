@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Cookies from "js-cookie"
 import {Redirect} from "react-router-dom"
-
+import NavbarComponent from "../Navbar/Navbar"
 class StudentLogin extends Component {
     render() {
         const token = Cookies.get("token")
@@ -11,6 +11,7 @@ class StudentLogin extends Component {
 
         return (
             <div>
+                <NavbarComponent />
                 <h1>Student Home</h1>
             </div>
         )

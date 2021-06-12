@@ -9,6 +9,10 @@ const outingSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    outtime:{
+        type:String,
+        required:true
+    },
     reasontype:{
         type:String,
         required:true
@@ -30,6 +34,9 @@ const outingSchema = mongoose.Schema({
         default:0
     },
     department:{
+        type:String
+    },
+    rejectby:{
         type:String
     },
     gender:{

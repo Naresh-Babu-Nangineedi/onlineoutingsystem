@@ -4,10 +4,10 @@ const Outing = require("../models/Outing")
 
 // Applying Outing
 const applyOuting = async(req,res)=>{
-    const {reason,reasontype,from,to} = req.body
+    const {reason,reasontype,from,to,outtime} = req.body
     const userId = req.user.id 
     // console.log(userId)
-    if(!reason||!reasontype||!from||!to){
+    if(!reason||!reasontype||!from||!to||!outtime){
         return res.status(400).json({msg:"All fields are required"})
     }
     let user = await User.findById(userId).select("-password")
@@ -31,10 +31,11 @@ const applyOuting = async(req,res)=>{
         from,
         to,
         userId,
+        outtime,
         process:processId,
         department:user.department,
         gender:user.gender,
-        parentmobile:user.parentmobile
+        parentmobile:user.parentmobile,
     })
     if(outing){
         res.status(201).json({outing})

@@ -7,6 +7,7 @@ import HodHome from "./components/HodHome"
 import WardenHome from "./components/WardenHome"
 import Hostel from "./components/Hostel"
 import AddStudent from "./components/AddStudent"
+import ApplyOuting from "./components/ApplyOuting"
 import InchargeProtected from "./components/ProtectedRoutes/InchargeProtected"
 import HodProtected from "./components/ProtectedRoutes/HodProtected"
 import WardenProtected from "./components/ProtectedRoutes/WardenProtected"
@@ -20,6 +21,7 @@ function App() {
       <Switch>
         <Route exact path="/login" component={Home} />
         <StudentProtected exact path="/" component={StudentHome} />
+        <StudentProtected exact path="/apply/outing" component={ApplyOuting} />
         <InchargeProtected exact path="/incharge" component={InchargeHome} />
         <InchargeProtected exact path="/hostel/:id" component={Hostel} />
         <InchargeProtected exact path="/add/student" component={AddStudent}/>

@@ -8,8 +8,8 @@ import Cookies from "js-cookie"
 class StudentLogin extends Component {
 
     state={
-        regno:"17pa1a1452",
-        password:"Vishnu123$",
+        regno:"",
+        password:"",
         errMessage:"",
         showErrorMessage:false,
         loading:false

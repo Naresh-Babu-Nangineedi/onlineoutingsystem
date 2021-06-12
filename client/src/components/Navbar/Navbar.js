@@ -94,6 +94,23 @@ const NavbarComponent = (props) => {
     user="Student"
   }
 
+  const inchargeLinks=()=>{
+    return(
+      <div className="navbar-nav">
+        <Link className="nav-link navLink text-white" to="/add/student">Add Student</Link>
+        <Link className="nav-link navLink text-white" to="/add/student">Edit Student</Link>
+      </div>
+    )
+  }
+  const studentLinks=()=>{
+    return(
+      <div className="navbar-nav">
+        <Link className="nav-link navLink text-white" to="/apply/outing">Apply Outing</Link>
+        <Link className="nav-link navLink text-white" to="/my_outings">My Outings</Link>
+      </div>
+    )
+  }
+
   return (
     <div>
       <ChangeInchargePassword />
@@ -146,8 +163,8 @@ const NavbarComponent = (props) => {
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div className="navbar-nav ml-auto pl-4">
                         <Link className="nav-link navLink text-white">Hello {user}</Link>
-                        <Link className="nav-link navLink text-white" to="/add/student">Add Student</Link>
-                        <Link className="nav-link navLink text-white" to="/add/student">Edit Student</Link>
+                        {Cookies.get("isadmin")==="3"&&(inchargeLinks())}
+                        {Cookies.get("isadmin")==="0"&&(studentLinks())}
                         <Link className="nav-link navLink text-white" data-toggle="modal" data-target="#changePassword">
                               Change Password
                         </Link>
