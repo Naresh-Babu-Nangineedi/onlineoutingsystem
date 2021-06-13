@@ -194,6 +194,16 @@ const getAllStudentsByHostel=async(req,res)=>{
     }
 }
 
+const getAllStudentsInOuting=async(req,res)=>{
+    const incharge = await HostelIncharge.findOne({_id:req.user}).select("-password")
+    const allStudents  = await User.find({outing:true,gender:incharge.gender})
+    if(allStudents){
+        return res.status(200).json(allStudents)
+    }else{
+        return res.status(400).json({json:"Unable to get all students data"})
+    }
+}
+
 
 
 
@@ -277,5 +287,6 @@ module.exports={
     changeInchargePassword,
     addHostel,
     getAllHostelsByGender,
-    getAllStudentsByHostel
+    getAllStudentsByHostel,
+    getAllStudentsInOuting
 }

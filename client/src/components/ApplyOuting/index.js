@@ -42,7 +42,6 @@ class ApplyOuting extends Component {
         this.setState({loading:false})
     }
 
-
     
     onChangeReasontype=(e)=>{
         this.setState({reasontype:e.target.value})
@@ -107,8 +106,6 @@ class ApplyOuting extends Component {
                                     <div className="col-12">
                                         <button className="btn btn-success w-100 mb-5" onClick={this.onSubmitHandler}>Apply</button>
                                     </div>
-
-                            
                     </div>
                 </div>  
 

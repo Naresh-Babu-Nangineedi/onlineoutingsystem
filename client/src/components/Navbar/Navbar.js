@@ -98,6 +98,7 @@ const NavbarComponent = (props) => {
     return(
       <div className="navbar-nav">
         <Link className="nav-link navLink text-white" to="/add/student">Add Student</Link>
+        <Link className="nav-link navLink text-white" to="/outings">Outings</Link>
         <Link className="nav-link navLink text-white" to="/add/student">Edit Student</Link>
       </div>
     )

@@ -12,8 +12,6 @@ class Hostel extends Component {
 
     onChangeSearchInput=(e)=>{
         this.setState({searchInput:e.target.value})
-        // const {hostelData} = this.state
-        // const filteredData = hostelData.filter(each=>each.)
     }
 
     getHostelData=async()=>{
@@ -37,7 +35,12 @@ class Hostel extends Component {
     onChangeOuting=(e)=>{
         //console.log("CHECKED")
         const {outing} = this.state
-        this.setState({outing:!outing})
+       this.setState({outing:!outing})
+       if(outing){
+           this.setState({searchInput:"outing"})
+       }else{
+         this.setState({searchInput:""})     
+       }
     }
 
     componentDidMount=()=>{
@@ -46,9 +49,10 @@ class Hostel extends Component {
 
     render() {
         const {hostelData,searchInput,outing} = this.state
-        //console.log(hostelData)
-        let searchResults = hostelData.filter(eachUser=>eachUser.regno.includes(searchInput)||eachUser.firstname.toLowerCase().includes(searchInput.toLowerCase())||eachUser.lastname.toLowerCase().includes(searchInput.toLowerCase()))
-        searchResults = hostelData.filter(eachUser=>eachUser.outing===outing)
+       // console.log(searchInput)
+        let searchResults = hostelData.filter(eachUser=>eachUser.regno.includes(searchInput)||eachUser.outing===true||eachUser.firstname.toLowerCase().includes(searchInput.toLowerCase())||eachUser.lastname.toLowerCase().includes(searchInput.toLowerCase()))
+       // console.log(searchResults)
+        // searchResults = hostelData.filter(eachUser=>eachUser.outing===outing)
         return (
             <div>
                 <NavbarComponent />
@@ -80,6 +84,25 @@ class Hostel extends Component {
                         </div>
                     ))
                 }
+                    {/* {outing&&
+                    outingResults.map((student)=>(
+                        <div className="card col-12 p-4 shadow col-lg-4 cardMargin" key={student._id}>
+                            <h2>{student.firstname} {student.lastname}</h2>
+                            <p><span className="sideHeading">Email: </span>{student.email}</p>
+                            <p><span className="sideHeading">Reg.no: </span>{student.regno}</p>
+                            <p><span className="sideHeading">Mobile: </span>{student.mobile}</p>
+                            <p><span className="sideHeading">Year: </span>{student.year}</p>
+                            <p><span className="sideHeading">Department: </span>{student.department}</p>
+                            <p><span className="sideHeading">Section: </span>{student.section}</p>
+                            <p><span className="sideHeading">Outing Type: </span>{student.outingtype}</p>
+                            <p><span className="sideHeading">Parent/Guardian Mobile: </span>{student.parentmobile}</p>
+                            <p><span className="sideHeading">Parent/Guardian Name: </span>{student.parent}</p>
+                            <p><span className="sideHeading">Blood Group: </span>{student.bloodgroup}</p>
+                            <p><span className="sideHeading">Hostel Name: </span>{student.hostelname}</p>
+                            <p><span className="sideHeading">Outing: </span>{student.outing===true?"In Outing":"In Hostel"}</p>
+                        </div>
+                    ))
+                } */}
                     </div>
                 </div>
                 

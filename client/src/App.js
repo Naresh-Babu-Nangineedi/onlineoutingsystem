@@ -8,6 +8,7 @@ import WardenHome from "./components/WardenHome"
 import Hostel from "./components/Hostel"
 import AddStudent from "./components/AddStudent"
 import ApplyOuting from "./components/ApplyOuting"
+import Outings from "./components/Outings"
 import InchargeProtected from "./components/ProtectedRoutes/InchargeProtected"
 import HodProtected from "./components/ProtectedRoutes/HodProtected"
 import WardenProtected from "./components/ProtectedRoutes/WardenProtected"
@@ -23,6 +24,7 @@ function App() {
         <StudentProtected exact path="/" component={StudentHome} />
         <StudentProtected exact path="/apply/outing" component={ApplyOuting} />
         <InchargeProtected exact path="/incharge" component={InchargeHome} />
+        <InchargeProtected exact path="/outings" component={Outings} />
         <InchargeProtected exact path="/hostel/:id" component={Hostel} />
         <InchargeProtected exact path="/add/student" component={AddStudent}/>
         <HodProtected exact path="/hod" component={HodHome} />
