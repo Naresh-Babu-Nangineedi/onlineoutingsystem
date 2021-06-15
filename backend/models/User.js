@@ -73,6 +73,9 @@ const userSchema = mongoose.Schema({
         type:Boolean,
         default:false
     },
+    outingId:{
+        type:String
+    },
     date:{
         type:Date,
         default:Date.now

@@ -32,7 +32,7 @@ class Outings extends Component {
             <div>
                 <NavbarComponent />
                 <h1>Outings</h1>
-            </div>
+            </div> 
         )
     }
 }

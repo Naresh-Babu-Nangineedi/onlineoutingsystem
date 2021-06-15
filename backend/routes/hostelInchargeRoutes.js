@@ -1,6 +1,6 @@
 const express = require('express')
 
-const {addIncharge,getAllStudentsByHostel,getAllStudentsInOuting,addHostel,addStudent,getAllHostelsByGender,loginIncharge,allGenderOutings,approveInchargeOuting,rejectInchargeOuting,updateUser,deleteUser,changeInchargePassword}=require("../controllers/hostelInchargeControllers")
+const {addIncharge,getAllStudentsByHostel,getOutingById,getAllStudentsInOuting,userDetails,addHostel,addStudent,getAllHostelsByGender,loginIncharge,allGenderOutings,approveInchargeOuting,rejectInchargeOuting,updateUser,deleteUser,changeInchargePassword}=require("../controllers/hostelInchargeControllers")
 const {isIncharge,isInchargeLogin}=require("../middlewares/authMiddleware")
 const {getUserOutings}=require("../controllers/outingControllers")
 
@@ -16,7 +16,9 @@ router.route("/delete/:userId").delete(isInchargeLogin,isIncharge,deleteUser)
 router.route("/change_password").post(isInchargeLogin,isIncharge,changeInchargePassword)
 router.route("/user/outing/:regno").get(isInchargeLogin,isIncharge,getUserOutings)
 router.route("/all/outings").get(isInchargeLogin,isIncharge,getAllStudentsInOuting)
+router.route("/user/:userId").get(isInchargeLogin,isIncharge,userDetails)
 router.route("/hostel/:hostelId").get(isInchargeLogin,isIncharge,getAllStudentsByHostel)
+router.route("/outing/:outingId").get(isInchargeLogin,isIncharge,getOutingById)
 router.route("/allHostels").get(isInchargeLogin,isIncharge,getAllHostelsByGender)
 router.route("/all_outings").get(isInchargeLogin,isIncharge,allGenderOutings)
 router.route("/approve/:outingId").post(isInchargeLogin,isIncharge,approveInchargeOuting)

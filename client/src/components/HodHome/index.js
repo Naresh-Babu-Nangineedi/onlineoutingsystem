@@ -27,6 +27,7 @@ class HodHome extends Component {
        // console.log(data)
        this.setState({allUsers:data,loading:false})
     }
+    
 
     componentDidMount=()=>{
         this.getAllUsers()
@@ -37,14 +38,20 @@ class HodHome extends Component {
         //console.log(e.target.value)  
     }
 
-    onChangeOuting=(e)=>{
-        const {outing} = this.state
-        this.setState({outing:!outing})
-    }
     
     render() {
         const {allUsers,loading,searchInput} = this.state
-        let searchResults = allUsers.filter(eachUser=>eachUser.regno.includes(searchInput)||eachUser.outing===true||eachUser.firstname.toLowerCase().includes(searchInput.toLowerCase())||eachUser.lastname.toLowerCase().includes(searchInput.toLowerCase()))
+        var searchResults;
+        if(searchInput === ""){
+            searchResults= allUsers;
+        }
+        else if("outing".includes(searchInput)){
+            searchResults = allUsers.filter(eachUser=>eachUser.outing===true)
+        }
+        else
+        searchResults = allUsers.filter(eachUser=>eachUser.regno.includes(searchInput)||eachUser.firstname.toLowerCase().includes(searchInput.toLowerCase())||eachUser.lastname.toLowerCase().includes(searchInput.toLowerCase()))
+       // console.log(searchResults)
+        //let searchResults = allUsers.filter(eachUser=>eachUser.regno.includes(searchInput)||eachUser.outing===true||eachUser.firstname.toLowerCase().includes(searchInput.toLowerCase())||eachUser.lastname.toLowerCase().includes(searchInput.toLowerCase()))
        // searchResults = allUsers.filter(eachUser=>eachUser.outing===outing)
         return (
             <div>
@@ -59,8 +66,7 @@ class HodHome extends Component {
                         }
                          <div className="col-12">
                             <input type="search" placeholder="Search..." onChange={this.onChangeSearchInput}  className="form-control mt-5 mb-2" />
-                            <input type="checkbox" className="ml-2 mr-1" name="outing" value="out" onChange={this.onChangeOuting} />
-                            <label> In Outing</label>
+            
                         </div>
                         
                             {searchResults.map((student)=>(

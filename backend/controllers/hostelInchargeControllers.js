@@ -212,7 +212,7 @@ const allGenderOutings = async(req,res)=>{
     const inchargeId = req.user 
     const incharge = await HostelIncharge.findById(inchargeId).select("-password")
     // const departmentUsers = await User.find({department:hod.department})
-    const presentOutings = await Outing.find({process:1,hod:1,gender:incharge.gender})
+    const presentOutings = await Outing.find({process:1,hod:1,gender:incharge.gender,incharge:0})
     if(presentOutings){
         return res.status(200).json(presentOutings)
     }else{
@@ -223,31 +223,75 @@ const allGenderOutings = async(req,res)=>{
 
 // Approve Incharge Outing
 const approveInchargeOuting = async(req,res)=>{
+    // const {outingId} = req.params
+    // let outing = await Outing.findById(outingId)
+    // outing.incharge=1
+    // await outing.save()
+    // //console.log(outing)
+    // if(outing.incharge===1){
+    //     return res.json(outing)
+    // }else{
+    //     return res.status(400).json({msg:"Unable to approve outing"})
+    // }
     const {outingId} = req.params
     let outing = await Outing.findById(outingId)
-    outing.incharge=1
-    await outing.save()
-    //console.log(outing)
-    if(outing.incharge===1){
-        return res.json(outing)
-    }else{
-        return res.status(400).json({msg:"Unable to approve outing"})
+    const inchargeId= req.user
+    const newOuting={}
+    newOuting.incharge = 1
+
+    //console.log(newOuting)
+    try {
+        let outing = await Outing.findById(outingId)
+        if(!outing) return res.status(404).json({msg:"Outing not found"})
+        outing = await Outing.findByIdAndUpdate(outingId,newOuting,{new:true})
+       // await Outing.save(outing)
+        //await Outing.findByIdAndRemove(outingId)
+        //console.log(outing)
+        return res.status(200).json(outing)
+    } catch (err) {
+        return res.status(400).json({msg:"Error occurs at backend"})
     }
 }
 
 // Reject Incharge Outing
 const rejectInchargeOuting = async(req,res)=>{
+    // const {outingId} = req.params
+    // const {rejectreason} = req.body
+    // let outing = await Outing.findById(outingId)
+    // outing.incharge=0
+    // outing.hod=0
+    // outing.rejectreason = rejectreason
+    // outing.process=0
+    // outing.rejectby = "Incharge"
+    // await outing.save()
+    // //console.log(outing)
+    // if(outing.incharge===0){
+    //     return res.json(outing)
+    // }else{
+    //     return res.status(400).json({msg:"Unable to reject outing"})
+    // }
     const {outingId} = req.params
     let outing = await Outing.findById(outingId)
-    outing.incharge=0
-    outing.hod=0
-    outing.process=0
-    await outing.save()
-    //console.log(outing)
-    if(outing.incharge===0){
-        return res.json(outing)
-    }else{
-        return res.status(400).json({msg:"Unable to reject outing"})
+    const inchargeId= req.user
+    const {rejectionReason}=req.body
+    const newOuting={}
+    if(rejectionReason) newOuting.rejectreason=rejectionReason
+    newOuting.hod=0
+    newOuting.incharge=0
+    newOuting.process=0
+    newOuting.rejectby = "INCHARGE"
+
+    //console.log(newOuting)
+    try {
+        let outing = await Outing.findById(outingId)
+        if(!outing) return res.status(404).json({msg:"Outing not found"})
+        outing = await Outing.findByIdAndUpdate(outingId,newOuting,{new:true})
+        await Outing.save(outing)
+        await Outing.findByIdAndRemove(outingId)
+        //console.log(outing)
+        return res.status(200).json(outing)
+    } catch (err) {
+        return res.status(400).json({msg:"Error occurs at backend"})
     }
 }
 
@@ -273,6 +317,26 @@ const changeInchargePassword = async(req,res)=>{
     }
 }
 
+const userDetails=async(req,res)=>{
+    const {userId} = req.params
+    const user = await User.findById(userId).select("-password")
+    if(user){
+        return res.status(200).json(user)
+    }else{
+        return res.status(400).json({msg:"Unable to get User Details"})
+    }
+}
+
+const getOutingById=async(req,res)=>{
+    const {outingId} = req.params
+    const outing = await Outing.findById(outingId)
+    if(outing){
+        return res.status(200).json(outing)
+    }else{
+        return res.status(400).json({msg:"Unable to get User Details"})
+    }
+}
+
 
 
 module.exports={
@@ -288,5 +352,7 @@ module.exports={
     addHostel,
     getAllHostelsByGender,
     getAllStudentsByHostel,
-    getAllStudentsInOuting
+    getAllStudentsInOuting,
+    userDetails,
+    getOutingById
 }

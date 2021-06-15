@@ -18,11 +18,17 @@ const applyOuting = async(req,res)=>{
         return res.status(400).json({msg:"User already in outing"})
     }
     let outingUser = await Outing.findOne({userId})
-     //console.log(outingUser)
+    // console.log(outingUser)
      if(outingUser){
          if(outingUser.process===1){
+            // console.log("PROCESS")
              return res.status(400).json({msg:"Outing is in process"})
-         }
+         } 
+         if(outingUser.process===0&&outingUser.rejectreason!==""){
+            //  console.log("REJECT")
+            //  return res.status(400).json({msg:"Outing is in process"})
+            await Outing.findOneAndRemove({userId})
+         } 
      }
     let processId=1
     const outing = await Outing.create({
@@ -32,12 +38,17 @@ const applyOuting = async(req,res)=>{
         to,
         userId,
         outtime,
-        process:processId,
+        rejectby:"",
+        rejectreason:"",
+        process:1,
         department:user.department,
         gender:user.gender,
         parentmobile:user.parentmobile,
     })
+
+
     if(outing){
+        //console.log(outing)
         res.status(201).json({outing})
     }else{
         return res.status(400).json({msg:"Error to apply outing"})

@@ -39,6 +39,9 @@ const outingSchema = mongoose.Schema({
     rejectby:{
         type:String
     },
+    rejectreason:{
+        type:String
+    },
     gender:{
         type:String
     },

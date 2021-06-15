@@ -79,11 +79,31 @@ const allDepartmentOutings = async(req,res)=>{
     const hodId = req.user 
     const hod = await Hod.findById(hodId).select("-password")
     const departmentUsers = await User.find({department:hod.department})
-    const presentOutings = await Outing.find({process:1,department:hod.department})
+    const presentOutings = await Outing.find({process:1,department:hod.department,hod:0})
     if(presentOutings){
         return res.status(200).json(presentOutings)
     }else{
         return res.status(400).json({msg:"Unable to get Current Outings"})
+    }
+}
+
+const userDetails=async(req,res)=>{
+    const {userId} = req.params
+    const user = await User.findById(userId).select("-password")
+    if(user){
+        return res.status(200).json(user)
+    }else{
+        return res.status(400).json({msg:"Unable to get User Details"})
+    }
+}
+
+const getOutingById=async(req,res)=>{
+    const {outingId} = req.params
+    const outing = await Outing.findById(outingId)
+    if(outing){
+        return res.status(200).json(outing)
+    }else{
+        return res.status(400).json({msg:"Unable to get User Details"})
     }
 }
 
@@ -92,13 +112,21 @@ const allDepartmentOutings = async(req,res)=>{
 const approveHodOuting = async(req,res)=>{
     const {outingId} = req.params
     let outing = await Outing.findById(outingId)
-    outing.hod=1
-    await outing.save()
-    //console.log(outing)
-    if(outing.hod===1){
-        return res.json(outing)
-    }else{
-        return res.status(400).json({msg:"Unable to approve outing"})
+    const hodId = req.user
+    const newOuting={}
+    newOuting.hod=1
+
+    //console.log(newOuting)
+    try {
+        let outing = await Outing.findById(outingId)
+        if(!outing) return res.status(404).json({msg:"Outing not found"})
+        outing = await Outing.findByIdAndUpdate(outingId,newOuting,{new:true})
+       // await Outing.save(outing)
+        //await Outing.findByIdAndRemove(outingId)
+        //console.log(outing)
+        return res.status(200).json(outing)
+    } catch (err) {
+        return res.status(400).json({msg:"Error occurs at backend"})
     }
 }
 
@@ -106,14 +134,25 @@ const approveHodOuting = async(req,res)=>{
 const rejectHodOuting = async(req,res)=>{
     const {outingId} = req.params
     let outing = await Outing.findById(outingId)
-    outing.hod=0
-    outing.process=0
-    await outing.save()
-    //console.log(outing)
-    if(outing.hod===0){
-        return res.json(outing)
-    }else{
-        return res.status(400).json({msg:"Unable to reject outing"})
+    const hodId = req.user
+    const {rejectionReason}=req.body
+    const newOuting={}
+    if(rejectionReason) newOuting.rejectreason=rejectionReason
+    newOuting.hod=0
+    newOuting.process=0
+    newOuting.rejectby = "HOD"
+
+    //console.log(newOuting)
+    try {
+        let outing = await Outing.findById(outingId)
+        if(!outing) return res.status(404).json({msg:"Outing not found"})
+        outing = await Outing.findByIdAndUpdate(outingId,newOuting,{new:true})
+        await Outing.save(outing)
+        await Outing.findByIdAndRemove(outingId)
+        //console.log(outing)
+        return res.status(200).json(outing)
+    } catch (err) {
+        return res.status(400).json({msg:"Error occurs at backend"})
     }
 }
 
@@ -138,6 +177,7 @@ const changeHodPassword = async(req,res)=>{
 
 
 
+
 module.exports={
     addHod,
     loginHod,
@@ -145,5 +185,7 @@ module.exports={
     allDepartmentUsers,
     approveHodOuting,
     rejectHodOuting,
-    changeHodPassword
+    changeHodPassword,
+    userDetails,
+    getOutingById
 }

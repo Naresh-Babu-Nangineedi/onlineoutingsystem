@@ -76,6 +76,9 @@ const approveWardenOuting = async(req,res)=>{
     const {outingId} = req.params
     let outing = await Outing.findById(outingId)
     outing.warden=1
+    outing.hod = 0
+    outing.incharge = 0
+    outing.process = 0
     await outing.save()
     if(outing.warden===1){
         return res.json(outing)
@@ -87,10 +90,13 @@ const approveWardenOuting = async(req,res)=>{
 // Reject Warden Outing
 const rejectWardenOuting = async(req,res)=>{
     const {outingId} = req.params
+    const {rejectreason} = req.body
     let outing = await Outing.findById(outingId)
     outing.warden=0
     outing.hod=0
     outing.incharge=0
+    outing.rejectby = "Warden"
+    outing.rejectreason = rejectreason
     await outing.save()
     if(outing.warden===0){
         return res.json(outing)

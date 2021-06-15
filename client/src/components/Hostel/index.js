@@ -32,16 +32,7 @@ class Hostel extends Component {
        this.setState({hostelData:data})
     }
 
-    onChangeOuting=(e)=>{
-        //console.log("CHECKED")
-        const {outing} = this.state
-       this.setState({outing:!outing})
-       if(outing){
-           this.setState({searchInput:"outing"})
-       }else{
-         this.setState({searchInput:""})     
-       }
-    }
+   
 
     componentDidMount=()=>{
         this.getHostelData()
@@ -50,7 +41,15 @@ class Hostel extends Component {
     render() {
         const {hostelData,searchInput,outing} = this.state
        // console.log(searchInput)
-        let searchResults = hostelData.filter(eachUser=>eachUser.regno.includes(searchInput)||eachUser.outing===true||eachUser.firstname.toLowerCase().includes(searchInput.toLowerCase())||eachUser.lastname.toLowerCase().includes(searchInput.toLowerCase()))
+        var searchResults;
+        if(searchInput === ""){
+            searchResults=hostelData;
+        }
+        else if("outing".includes(searchInput)){
+            searchResults = hostelData.filter(eachUser=>eachUser.outing===true)
+        }
+        else
+        searchResults = hostelData.filter(eachUser=>eachUser.regno.includes(searchInput)||eachUser.firstname.toLowerCase().includes(searchInput.toLowerCase())||eachUser.lastname.toLowerCase().includes(searchInput.toLowerCase()))
        // console.log(searchResults)
         // searchResults = hostelData.filter(eachUser=>eachUser.outing===outing)
         return (
@@ -62,8 +61,7 @@ class Hostel extends Component {
                         <input type="search" placeholder="Search..." onChange={this.onChangeSearchInput}  className="form-control mt-5 mb-2" />
                         {/* <input type="checkbox" name="outing" value="in" onChange={this.onChangeOuting} className="ml-2" />
                         <label className="mr-3"> In Hostel</label> */}
-                        <input type="checkbox" className="ml-2 mr-1" name="outing" value="out" onChange={this.onChangeOuting} />
-                        <label> In Outing</label>
+                       
                     </div>
                     {
                     searchResults.map((student)=>(
